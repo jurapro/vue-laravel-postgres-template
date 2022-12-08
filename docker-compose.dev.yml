@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ./docker/Dockerfile.dev
+    command: npm run serve -- --port 80
+    stdin_open: true
+    tty: true
+    environment:
+      - WDS_SOCKET_PORT=0
+    volumes:
+      - ./frontend/src:/vue-ui/src
+
+  backend:
+    environment:
+      - APP_DEBUG=true
+
+  adminer:
+    image: adminer:4.8.1
+    container_name: it-cluster-adminer
+    restart: unless-stopped
+    networks:
+      - it-cluster-network
+    ports:
+      - ${ADMINER_PORT:-8080}:8080
+    depends_on:
+      - db

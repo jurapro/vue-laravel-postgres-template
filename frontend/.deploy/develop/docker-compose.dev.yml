@@ -1,0 +1,23 @@
+version: '3.9'
+
+networks:
+  default:
+    name: ${PROJECT_NAME:-frontend-dev}-network
+    driver: bridge
+
+services:
+
+  frontend:
+    build:
+      context: ../../.
+      dockerfile: ./.deploy/develop/Dockerfile.dev
+    container_name: ${PROJECT_NAME:-frontend-dev}-frontend
+    command: npm run serve -- --port 80
+    stdin_open: true
+    tty: true
+    environment:
+      - WDS_SOCKET_PORT=0
+    ports:
+      - ${WEB_PORT:-8000}:80
+    volumes:
+      - ../../src:/vue-ui/src

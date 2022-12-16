@@ -1,0 +1,17 @@
+version: '3.9'
+
+networks:
+  default:
+    name: ${PROJECT_NAME:-frontend-prod}-network
+    driver: bridge
+
+services:
+
+  frontend:
+    build:
+      context: ../../.
+      dockerfile: ./.deploy/production/Dockerfile.prod
+    container_name: ${PROJECT_NAME:-frontend-prod}-frontend
+    ports:
+      - ${WEB_PORT:-8000}:80
+    restart: unless-stopped

@@ -10,7 +10,7 @@ services:
   frontend:
     build:
       context: ../../.
-      dockerfile: ./.deploy/production/Dockerfile.prod
+      dockerfile: ./.deploy/production/Dockerfile
     container_name: ${PROJECT_NAME:-frontend-prod}-frontend
     ports:
       - ${WEB_PORT:-8000}:80

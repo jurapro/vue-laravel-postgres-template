@@ -12,20 +12,20 @@ services:
 
   frontend:
     build:
-      context: ./frontend
-      dockerfile: ./docker/Dockerfile.prod
+      context: ../../frontend
+      dockerfile: ./.deploy/production/Dockerfile
     container_name: ${PROJECT_NAME:-template}-frontend
     restart: unless-stopped
 
   backend:
     build:
-      context: ./backend
-      dockerfile: ./docker/Dockerfile
+      context: ../../backend
+      dockerfile: ./.deploy/production/Dockerfile
       args:
         USER: ${USER:-jurapro}
     entrypoint: sh -c "./wait-for-it.sh -t 300 db:5432 && /usr/bin/composer install && php /app/artisan migrate --force && php-fpm"
     volumes:
-      - ./backend:/app
+      - ../../backend:/app
     environment:
       - APP_ENV=local
       - APP_KEY=base64:7t3iJGYKu1jqjeEQixGEL8mXwCr6XgVRmd6ryRII3Jo=
@@ -44,8 +44,8 @@ services:
   backend-api:
     image: nginx:1.19-alpine
     volumes:
-      - ./backend:/app
-      - ./backend/docker/nginx/conf.d:/etc/nginx/conf.d
+      - ../../backend:/app
+      - ../../backend/.deploy/production/nginx:/etc/nginx/conf.d
     depends_on:
       - backend
     container_name: ${PROJECT_NAME:-template}-backend-api
@@ -66,7 +66,7 @@ services:
     image: nginx:1.19-alpine
     container_name: ${PROJECT_NAME:-template}-proxy
     volumes:
-      - ./proxy/default.conf:/etc/nginx/conf.d/default.conf
+      - ../../proxy/nginx:/etc/nginx/conf.d
     ports:
       - ${WEB_PORT:-8000}:80
     depends_on:

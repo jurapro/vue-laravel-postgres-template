@@ -29,12 +29,12 @@ RUN chown -R $USER:$USER .
 
 RUN docker-php-ext-install pdo pdo_pgsql sockets bcmath zip pcntl posix
 COPY --chown=$USER:$USER . .
-RUN chmod +x ./wait-for-it.sh
+#RUN chmod +x ./wait-for-it.sh
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 RUN pecl install xdebug
 RUN docker-php-ext-enable xdebug
-COPY ./docker/dev.ini /usr/local/etc/php/conf.d/dev.ini
+COPY ./.deploy/production/dev.ini /usr/local/etc/php/conf.d/dev.ini
 RUN composer install
 RUN chown -R $USER:$USER .
 USER $USER

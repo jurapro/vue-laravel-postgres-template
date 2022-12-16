@@ -1,7 +1,8 @@
 version: '3.9'
 
 networks:
-  it-cluster-network:
+  default:
+    name: ${PROJECT_NAME:-template}-network
     driver: bridge
 
 volumes:
@@ -13,10 +14,8 @@ services:
     build:
       context: ./frontend
       dockerfile: ./docker/Dockerfile.prod
-    container_name: it-cluster-frontend
+    container_name: ${PROJECT_NAME:-template}-frontend
     restart: unless-stopped
-    networks:
-      - it-cluster-network
 
   backend:
     build:
@@ -39,10 +38,8 @@ services:
       - DB_PASSWORD=${DB_PASSWORD:-QWEasd123$}
     depends_on:
       - db
-    container_name: it-cluster-backend
+    container_name: ${PROJECT_NAME:-template}-backend
     restart: unless-stopped
-    networks:
-      - it-cluster-network
 
   backend-api:
     image: nginx:1.19-alpine
@@ -51,14 +48,12 @@ services:
       - ./backend/docker/nginx/conf.d:/etc/nginx/conf.d
     depends_on:
       - backend
-    container_name: it-cluster-backend-api
+    container_name: ${PROJECT_NAME:-template}-backend-api
     restart: unless-stopped
-    networks:
-      - it-cluster-network
 
   db:
     image: postgres:15.0-alpine
-    container_name: it-cluster-db
+    container_name: ${PROJECT_NAME:-template}-db
     restart: unless-stopped
     environment:
       - POSTGRES_PASSWORD=${DB_PASSWORD:-QWEasd123$}
@@ -66,12 +61,10 @@ services:
       - POSTGRES_DB=${DB_DATABASE:-postgres}
     volumes:
       - pgdata:/var/lib/postgresql/data
-    networks:
-      - it-cluster-network
 
   proxy:
     image: nginx:1.19-alpine
-    container_name: it-cluster-proxy
+    container_name: ${PROJECT_NAME:-template}-proxy
     volumes:
       - ./proxy/default.conf:/etc/nginx/conf.d/default.conf
     ports:
@@ -79,5 +72,3 @@ services:
     depends_on:
       - frontend
       - backend-api
-    networks:
-      - it-cluster-network

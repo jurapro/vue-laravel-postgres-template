@@ -20,7 +20,7 @@ class UserData extends Data
 
     public static function withValidator(Validator $validator): void
     {
-        if ($validator->errors()) {
+        if ($validator->fails()) {
             throw new ApiException(422, 'Validation error', $validator->errors());
         }
     }

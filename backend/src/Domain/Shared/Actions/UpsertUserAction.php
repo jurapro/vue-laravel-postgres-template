@@ -3,6 +3,7 @@
 namespace Domain\Shared\Actions;
 
 use Domain\Shared\DataTransferObjects\UserData;
+use Domain\Shared\Events\UpsertUserEvent;
 use Domain\Shared\Models\User;
 
 class UpsertUserAction
@@ -17,7 +18,7 @@ class UpsertUserAction
                 ...$data->all(),
             ],
         );
-
+        event(new UpsertUserEvent($user));
         return $user;
     }
 }

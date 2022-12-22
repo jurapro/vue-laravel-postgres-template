@@ -10,6 +10,6 @@ class UpsertUserListener
 {
     public function handle(UpsertUserEvent $event)
     {
-        Log::info('UpsertUserEvent.');
+        Log::info('UpsertUserEvent');
     }
 }

@@ -23,6 +23,8 @@ services:
       - APP_ENV=local
       - APP_KEY=base64:7t3iJGYKu1jqjeEQixGEL8mXwCr6XgVRmd6ryRII3Jo=
       - APP_DEBUG=true
+      - LOG_CHANNEL=stack
+      - LOG_LEVEL=debug
       - DB_CONNECTION=pgsql
       - DB_HOST=db
       - DB_PORT=${DB_PORT:-5432}
